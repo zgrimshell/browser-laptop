@@ -182,7 +182,7 @@ describe('urlbar', function () {
       yield this.app.client.waitUntil(() =>
         this.app.client.getCssProperty(activeTab, 'background-color').then(backgroundColor =>
           backgroundColor.parsed.hex === '#4d90fe'
-      ))
+      ), 10000)
     })
     it.skip('Obtains theme color from the background', function *() {
       const redPage = Brave.server.url('red_bg.html')
