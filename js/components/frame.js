@@ -51,7 +51,7 @@ class Frame extends ImmutableComponent {
     }
     this.webview = !contentScriptsChanged && this.webview || document.createElement('webview')
     this.webview.setAttribute('allowDisplayingInsecureContent', true)
-    this.webview.setAttribute('useragent', 'Mozilla/5.0 (iPad; CPU OS 9_0 like Mac OS X) AppleWebKit/601.1.17 (KHTML, like Gecko) Version/8.0 Mobile/13A175 Safari/600.1.4')
+    this.webview.setAttribute('useragent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/601.4.4 (KHTML, like Gecko) Version/9.0.3 Safari/601.4.4')
     this.webview.setAttribute('data-frame-key', this.props.frame.get('key'))
     this.webview.setAttribute('contentScripts', contentScripts)
     if (this.props.frame.get('isPrivate')) {
