@@ -331,6 +331,7 @@ class Main extends ImmutableComponent {
         <div className='navigatorWrapper'
           onDoubleClick={this.onDoubleClick.bind(this)}
           onDragOver={this.onDragOver.bind(this)}
+          onContextMenu={contextMenus.onTabsToolbarContextMenu.bind(this, activeFrame, undefined)}
           onDrop={this.onDrop.bind(this)}>
           <div className='backforward'>
             <span data-l10n-id='backButton'
