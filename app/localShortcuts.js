@@ -33,9 +33,14 @@ module.exports.register = (win) => {
       ['Alt+Right', messages.SHORTCUT_ACTIVE_FRAME_FORWARD])
   }
 
+  let tabSwitchModifier = 'CmdOrCtrl+'
+  if (process.platform === 'linux') {
+    tabSwitchModifier = 'Alt+'
+  }
+
   // Tab ordering shortcuts
   Array.from(new Array(8), (x, i) => i).reduce((list, i) => {
-    list.push(['CmdOrCtrl+' + String(i + 1), messages.SHORTCUT_SET_ACTIVE_FRAME_BY_INDEX, i])
+    list.push([`${tabSwitchModifier}${String(i + 1)}`, messages.SHORTCUT_SET_ACTIVE_FRAME_BY_INDEX, i])
     return list
   }, simpleWebContentEvents)
 
