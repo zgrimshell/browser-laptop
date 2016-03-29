@@ -80,7 +80,7 @@ function inputTemplateInit (e) {
 
 function tabsToolbarTemplateInit (activeFrame, closestDestinationDetail) {
   return [
-    CommonMenu.bookmarksMenuItem,
+    CommonMenu.bookmarksMenuItem(),
     CommonMenu.bookmarksToolbarMenuItem(),
     CommonMenu.separatorMenuItem,
     addBookmarkMenuItem(siteUtil.getDetailFromFrame(activeFrame, siteTags.BOOKMARK), closestDestinationDetail),
@@ -339,7 +339,7 @@ function tabTemplateInit (frameProps) {
   CommonMenu.separatorMenuItem)
 
   items.push(Object.assign({},
-    CommonMenu.reopenLastClosedTabItem,
+    CommonMenu.reopenLastClosedTabItem(),
     { enabled: WindowStore.getState().get('closedFrames').size > 0 }
   ))
 
@@ -371,38 +371,38 @@ function getEditableItems (hasSelection) {
 
 function hamburgerTemplateInit (braverySettings) {
   const template = [
-    CommonMenu.newTabMenuItem,
-    CommonMenu.newPrivateTabMenuItem,
-    CommonMenu.newPartitionedTabMenuItem,
-    CommonMenu.newWindowMenuItem,
+    CommonMenu.newTabMenuItem(),
+    CommonMenu.newPrivateTabMenuItem(),
+    CommonMenu.newPartitionedTabMenuItem(),
+    CommonMenu.newWindowMenuItem(),
     CommonMenu.separatorMenuItem,
-    CommonMenu.findOnPageMenuItem,
-    CommonMenu.printMenuItem,
+    CommonMenu.findOnPageMenuItem(),
+    CommonMenu.printMenuItem(),
     CommonMenu.separatorMenuItem,
     CommonMenu.buildBraveryMenu(braverySettings, function () {
       ipc.send(messages.UPDATE_APP_MENU, {bookmarked: braverySettings.bookmarked})
     }),
     CommonMenu.separatorMenuItem,
-    CommonMenu.preferencesMenuItem,
+    CommonMenu.preferencesMenuItem(),
     {
       label: locale.translation('bookmarks'),
       submenu: [
-        CommonMenu.bookmarksMenuItem,
+        CommonMenu.bookmarksMenuItem(),
         CommonMenu.bookmarksToolbarMenuItem(),
         CommonMenu.separatorMenuItem,
-        CommonMenu.importBookmarksMenuItem
+        CommonMenu.importBookmarksMenuItem()
       ]
     },
     CommonMenu.separatorMenuItem,
     {
       label: locale.translation('help'),
       submenu: [
-        CommonMenu.aboutBraveMenuItem,
+        CommonMenu.aboutBraveMenuItem(),
         CommonMenu.separatorMenuItem,
-        CommonMenu.checkForUpdateMenuItem,
+        CommonMenu.checkForUpdateMenuItem(),
         CommonMenu.separatorMenuItem,
-        CommonMenu.reportAnIssueMenuItem,
-        CommonMenu.submitFeedbackMenuItem
+        CommonMenu.reportAnIssueMenuItem(),
+        CommonMenu.submitFeedbackMenuItem()
       ]
     }
   ]

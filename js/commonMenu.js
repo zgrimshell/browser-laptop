@@ -58,52 +58,64 @@ module.exports.sendToFocusedWindow = (focusedWindow, message) => {
   }
 }
 
-module.exports.quitMenuItem = {
-  label: locale.translation('quit') + ' ' + appConfig.name,
-  accelerator: 'Command+Q',
-  click: app.quit
+module.exports.quitMenuItem = () => {
+  return {
+    label: locale.translation('quit') + ' ' + appConfig.name,
+    accelerator: 'Command+Q',
+    click: app.quit
+  }
 }
 
-module.exports.newTabMenuItem = {
-  label: locale.translation('newTab'),
-  accelerator: 'CmdOrCtrl+T',
-  click: function (item, focusedWindow) {
-    if (!module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_NEW_FRAME])) {
-      // no active windows
-      appActions.newWindow()
+module.exports.newTabMenuItem = () => {
+  return {
+    label: locale.translation('newTab'),
+    accelerator: 'CmdOrCtrl+T',
+    click: function (item, focusedWindow) {
+      if (!module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_NEW_FRAME])) {
+        // no active windows
+        appActions.newWindow()
+      }
     }
   }
 }
 
-module.exports.newPrivateTabMenuItem = {
-  label: locale.translation('newPrivateTab'),
-  accelerator: 'CmdOrCtrl+Alt+T',
-  click: function (item, focusedWindow) {
-    ensureAtLeastOneWindow(Immutable.fromJS({ isPrivate: true }))
-    module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_NEW_FRAME, undefined, { isPrivate: true }])
+module.exports.newPrivateTabMenuItem = () => {
+  return {
+    label: locale.translation('newPrivateTab'),
+    accelerator: 'CmdOrCtrl+Alt+T',
+    click: function (item, focusedWindow) {
+      ensureAtLeastOneWindow(Immutable.fromJS({ isPrivate: true }))
+      module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_NEW_FRAME, undefined, { isPrivate: true }])
+    }
   }
 }
 
-module.exports.newPartitionedTabMenuItem = {
-  label: locale.translation('newSessionTab'),
-  accelerator: 'CmdOrCtrl+Alt+S',
-  click: function (item, focusedWindow) {
-    ensureAtLeastOneWindow(Immutable.fromJS({ isPartitioned: true }))
-    module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_NEW_FRAME, undefined, { isPartitioned: true }])
+module.exports.newPartitionedTabMenuItem = () => {
+  return {
+    label: locale.translation('newSessionTab'),
+    accelerator: 'CmdOrCtrl+Alt+S',
+    click: function (item, focusedWindow) {
+      ensureAtLeastOneWindow(Immutable.fromJS({ isPartitioned: true }))
+      module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_NEW_FRAME, undefined, { isPartitioned: true }])
+    }
   }
 }
 
-module.exports.newWindowMenuItem = {
-  label: locale.translation('newWindow'),
-  accelerator: 'CmdOrCtrl+N',
-  click: () => appActions.newWindow()
+module.exports.newWindowMenuItem = () => {
+  return {
+    label: locale.translation('newWindow'),
+    accelerator: 'CmdOrCtrl+N',
+    click: () => appActions.newWindow()
+  }
 }
 
-module.exports.reopenLastClosedTabItem = {
-  label: locale.translation('reopenLastClosedTab'),
-  accelerator: 'Shift+CmdOrCtrl+T',
-  click: function (item, focusedWindow) {
-    module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_UNDO_CLOSED_FRAME])
+module.exports.reopenLastClosedTabItem = () => {
+  return {
+    label: locale.translation('reopenLastClosedTab'),
+    accelerator: 'Shift+CmdOrCtrl+T',
+    click: function (item, focusedWindow) {
+      module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_UNDO_CLOSED_FRAME])
+    }
   }
 }
 
@@ -111,75 +123,87 @@ module.exports.separatorMenuItem = {
   type: 'separator'
 }
 
-module.exports.printMenuItem = {
-  label: locale.translation('print'),
-  accelerator: 'CmdOrCtrl+P',
-  click: function (item, focusedWindow) {
-    module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_ACTIVE_FRAME_PRINT])
-  }
-}
-
-module.exports.findOnPageMenuItem = {
-  label: locale.translation('findOnPage'),
-  accelerator: 'CmdOrCtrl+F',
-  click: function (item, focusedWindow) {
-    module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_ACTIVE_FRAME_SHOW_FINDBAR])
-  }
-}
-
-module.exports.checkForUpdateMenuItem = {
-  label: locale.translation('checkForUpdates'),
-  click: function (item, focusedWindow) {
-    if (process.type === 'browser') {
-      ensureAtLeastOneWindow()
-      process.emit(messages.CHECK_FOR_UPDATE)
-    } else {
-      electron.ipcRenderer.send(messages.CHECK_FOR_UPDATE)
+module.exports.printMenuItem = () => {
+  return {
+    label: locale.translation('print'),
+    accelerator: 'CmdOrCtrl+P',
+    click: function (item, focusedWindow) {
+      module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_ACTIVE_FRAME_PRINT])
     }
   }
 }
 
-module.exports.preferencesMenuItem = {
-  label: locale.translation('preferences'),
-  accelerator: 'CmdOrCtrl+,',
-  click: (item, focusedWindow) => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      appActions.newWindow(Immutable.fromJS({
-        location: 'about:preferences'
-      }))
-    } else {
-      module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_NEW_FRAME, 'about:preferences', { singleFrame: true }])
+module.exports.findOnPageMenuItem = () => {
+  return {
+    label: locale.translation('findOnPage'),
+    accelerator: 'CmdOrCtrl+F',
+    click: function (item, focusedWindow) {
+      module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_ACTIVE_FRAME_SHOW_FINDBAR])
     }
   }
 }
 
-module.exports.bookmarksMenuItem = {
-  label: locale.translation('bookmarksManager'),
-  accelerator: isDarwin ? 'CmdOrCtrl+Alt+B' : 'Ctrl+Shift+O',
-  click: (item, focusedWindow) => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      appActions.newWindow(Immutable.fromJS({
-        location: 'about:bookmarks'
-      }))
-    } else {
-      module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_NEW_FRAME, 'about:bookmarks', { singleFrame: true }])
+module.exports.checkForUpdateMenuItem = () => {
+  return {
+    label: locale.translation('checkForUpdates'),
+    click: function (item, focusedWindow) {
+      if (process.type === 'browser') {
+        ensureAtLeastOneWindow()
+        process.emit(messages.CHECK_FOR_UPDATE)
+      } else {
+        electron.ipcRenderer.send(messages.CHECK_FOR_UPDATE)
+      }
     }
   }
 }
 
-module.exports.importBookmarksMenuItem = {
-  label: locale.translation('importBookmarks'),
-  click: function (item, focusedWindow) {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      appActions.newWindow(undefined, undefined, undefined, function () {
-        // The timeout here isn't necessary but giving the window a bit of time to popup
-        // before the modal file picker pops up seems to work nicer.
-        setTimeout(() =>
-          module.exports.sendToFocusedWindow(BrowserWindow.getAllWindows()[0], [messages.IMPORT_BOOKMARKS]), 100)
-      })
-      return
+module.exports.preferencesMenuItem = () => {
+  return {
+    label: locale.translation('preferences'),
+    accelerator: 'CmdOrCtrl+,',
+    click: (item, focusedWindow) => {
+      if (BrowserWindow.getAllWindows().length === 0) {
+        appActions.newWindow(Immutable.fromJS({
+          location: 'about:preferences'
+        }))
+      } else {
+        module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_NEW_FRAME, 'about:preferences', { singleFrame: true }])
+      }
     }
-    module.exports.sendToFocusedWindow(focusedWindow, [messages.IMPORT_BOOKMARKS])
+  }
+}
+
+module.exports.bookmarksMenuItem = () => {
+  return {
+    label: locale.translation('bookmarksManager'),
+    accelerator: isDarwin ? 'CmdOrCtrl+Alt+B' : 'Ctrl+Shift+O',
+    click: (item, focusedWindow) => {
+      if (BrowserWindow.getAllWindows().length === 0) {
+        appActions.newWindow(Immutable.fromJS({
+          location: 'about:bookmarks'
+        }))
+      } else {
+        module.exports.sendToFocusedWindow(focusedWindow, [messages.SHORTCUT_NEW_FRAME, 'about:bookmarks', { singleFrame: true }])
+      }
+    }
+  }
+}
+
+module.exports.importBookmarksMenuItem = () => {
+  return {
+    label: locale.translation('importBookmarks'),
+    click: function (item, focusedWindow) {
+      if (BrowserWindow.getAllWindows().length === 0) {
+        appActions.newWindow(undefined, undefined, undefined, function () {
+          // The timeout here isn't necessary but giving the window a bit of time to popup
+          // before the modal file picker pops up seems to work nicer.
+          setTimeout(() =>
+                     module.exports.sendToFocusedWindow(BrowserWindow.getAllWindows()[0], [messages.IMPORT_BOOKMARKS]), 100)
+        })
+        return
+      }
+      module.exports.sendToFocusedWindow(focusedWindow, [messages.IMPORT_BOOKMARKS])
+    }
   }
   /*
   submenu: [
@@ -190,19 +214,24 @@ module.exports.importBookmarksMenuItem = {
   */
 }
 
-module.exports.reportAnIssueMenuItem = {
-  label: locale.translation('reportAnIssue'),
-  click: function (item, focusedWindow) {
-    module.exports.sendToFocusedWindow(focusedWindow,
-      [messages.SHORTCUT_NEW_FRAME, issuesUrl])
+module.exports.reportAnIssueMenuItem = () => {
+  return {
+    label: locale.translation('reportAnIssue'),
+    click: function (item, focusedWindow) {
+      module.exports.sendToFocusedWindow(focusedWindow,
+                                         [messages.SHORTCUT_NEW_FRAME, issuesUrl])
+    }
   }
 }
 
-module.exports.submitFeedbackMenuItem = {
-  label: locale.translation('submitFeedback'),
-  click: function (item, focusedWindow) {
-    module.exports.sendToFocusedWindow(focusedWindow,
-      [messages.SHORTCUT_NEW_FRAME, appConfig.contactUrl])
+module.exports.submitFeedbackMenuItem = () => {
+  return {
+    label: locale.translation('submitFeedback'),
+    click: function (item, focusedWindow) {
+      module.exports.sendToFocusedWindow(focusedWindow,
+                                         [messages.SHORTCUT_NEW_FRAME,
+                                          appConfig.contactUrl])
+    }
   }
 }
 
@@ -218,13 +247,15 @@ module.exports.bookmarksToolbarMenuItem = () => {
   }
 }
 
-module.exports.aboutBraveMenuItem = {
-  label: locale.translation('about') + ' ' + appConfig.name,
-  click: (item, focusedWindow) => {
-    if (process.type === 'browser') {
-      process.emit(messages.SHOW_ABOUT)
-    } else {
-      electron.ipcRenderer.send(messages.SHOW_ABOUT)
+module.exports.aboutBraveMenuItem = () => {
+  return {
+    label: locale.translation('about') + ' ' + appConfig.name,
+    click: (item, focusedWindow) => {
+      if (process.type === 'browser') {
+        process.emit(messages.SHOW_ABOUT)
+      } else {
+        electron.ipcRenderer.send(messages.SHOW_ABOUT)
+      }
     }
   }
 }
